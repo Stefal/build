@@ -53,7 +53,7 @@ chmod +x install.sh
 sed -i "s/\$(logname)/${_user}/g" /home/${_user}/install.sh
 sed -i "s/\$(logname)/${_user}/g" /home/${_user}/rtkbase/copy_unit.sh
 ./install.sh --dependencies --rtklib --rtkbase-release --gpsd-chrony
-echo ${_user} > /etc/hostname
+echo 'basegnss' > /etc/hostname
 #hostname temporaire pendant les tests
 echo 'basegnss2' > /etc/hotsname
 

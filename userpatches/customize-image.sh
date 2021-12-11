@@ -41,8 +41,15 @@ Main() {
 } # Main
 
 InstallRTKBase() {
-rm /root/.not_logged_in_yet
+
 _user='basegnss'
+hostname_new='basegnss'
+
+# remove automatic account creation on first login and disable root account access
+rm /root/.not_logged_in_yet
+passwd -d root
+
+# create user account
 useradd -m ${_user}
 usermod --shell /bin/bash ${_user}
 usermod -a -G tty,disk,dialout,sudo,audio,video,plugdev,games,users,systemd-journal,input,netdev,ssh ${_user}
@@ -53,9 +60,10 @@ chmod +x install.sh
 sed -i "s/\$(logname)/${_user}/g" /home/${_user}/install.sh
 sed -i "s/\$(logname)/${_user}/g" /home/${_user}/rtkbase/copy_unit.sh
 ./install.sh --dependencies --rtklib --rtkbase-release --gpsd-chrony
-echo 'basegnss' > /etc/hostname
-#hostname temporaire pendant les tests
-echo 'basegnss2' > /etc/hotsname
+
+# changing hostname
+sed -i "s/${BOARD}/${hostname_new}/g" /etc/hosts
+sed -i "s/${BOARD}/${hostname_new}/g" /etc/hostname
 
 # injecting commands inside armbian-firstrun
 sed -i '/systemctl\ disable\ armbian-firstrun/i \

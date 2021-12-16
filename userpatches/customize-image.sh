@@ -45,6 +45,11 @@ InstallRTKBase() {
 _user='basegnss'
 hostname_new='basegnss'
 
+# install avahi-daemon to enable hostname.local access
+apt-get install -yy avahi-daemon
+[[ -f /usr/share/doc/avahi-daemon/examples/sftp-ssh.service ]] && cp /usr/share/doc/avahi-daemon/examples/sftp-ssh.service /etc/avahi/services/
+[[ -f /usr/share/doc/avahi-daemon/examples/ssh.service ]] && cp /usr/share/doc/avahi-daemon/examples/ssh.service /etc/avahi/services/
+
 # remove automatic account creation on first login and disable root account access
 rm /root/.not_logged_in_yet
 passwd -d root
@@ -78,6 +83,9 @@ sed -i "s\/\${_user}\/\\\$(logname)\/g" \/home\/\${_user}\/install.sh \
 sed -i "s\/\${_user}\/\\\$(logname)\/g" \/home\/\${_user}\/rtkbase\/copy_unit.sh \
 ' /usr/lib/armbian/armbian-firstrun
 
+# cleaning
+apt clean
+# End
 }
 
 InstallOpenMediaVault() {

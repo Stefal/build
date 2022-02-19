@@ -41,8 +41,28 @@ Main() {
 } # Main
 
 InstallRTKBase() {
-rm /root/.not_logged_in_yet
+
 _user='basegnss'
+hostname_new='basegnss2'
+
+if [ "${BOARD}" = 'orangepizero' ]
+then
+ # disable wifi for Orange Pi Zero 
+ echo 'blacklist xradio_wlan' > /etc/modprobe.d/xradio_wlan.conf
+ echo 'blacklist mac80211' > /etc/modprobe.d/mac80211.conf
+ echo 'blacklist cfg80211' > /etc/modprobe.d/cfg80211.conf
+fi
+
+# install avahi-daemon to enable hostname.local access
+apt-get install -yy avahi-daemon
+[[ -f /usr/share/doc/avahi-daemon/examples/sftp-ssh.service ]] && cp /usr/share/doc/avahi-daemon/examples/sftp-ssh.service /etc/avahi/services/
+[[ -f /usr/share/doc/avahi-daemon/examples/ssh.service ]] && cp /usr/share/doc/avahi-daemon/examples/ssh.service /etc/avahi/services/
+
+# remove automatic account creation on first login and disable root account access
+rm /root/.not_logged_in_yet
+passwd -d root
+
+# create user account
 useradd -m ${_user}
 usermod --shell /bin/bash ${_user}
 usermod -a -G tty,disk,dialout,sudo,audio,video,plugdev,games,users,systemd-journal,input,netdev,ssh ${_user}
@@ -53,9 +73,10 @@ chmod +x install.sh
 sed -i "s/\$(logname)/${_user}/g" /home/${_user}/install.sh
 sed -i "s/\$(logname)/${_user}/g" /home/${_user}/rtkbase/copy_unit.sh
 ./install.sh --dependencies --rtklib --rtkbase-release --gpsd-chrony
-echo 'basegnss' > /etc/hostname
-#hostname temporaire pendant les tests
-echo 'basegnss2' > /etc/hotsname
+
+# changing hostname
+sed -i "s/${BOARD}/${hostname_new}/g" /etc/hosts
+sed -i "s/${BOARD}/${hostname_new}/g" /etc/hostname
 
 # injecting commands inside armbian-firstrun
 sed -i '/systemctl\ disable\ armbian-firstrun/i \
@@ -65,11 +86,14 @@ echo '\''USER IS: '\'' \$_user \
 _user='\''basegnss'\'' \
 echo '\''USER IS: '\'' \$_user \
 \/home\/\$_user\/\/install.sh --unit-files --detect-usb-gnss --configure-gnss --start-services \
-#reverting changes in rtkbase scripts \
+  #reverting changes in rtkbase scripts \
 sed -i "s\/\${_user}\/\\\$(logname)\/g" \/home\/\${_user}\/install.sh \
 sed -i "s\/\${_user}\/\\\$(logname)\/g" \/home\/\${_user}\/rtkbase\/copy_unit.sh \
 ' /usr/lib/armbian/armbian-firstrun
 
+# cleaning
+apt clean
+# End
 }
 
 InstallOpenMediaVault() {

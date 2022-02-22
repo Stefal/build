@@ -71,8 +71,8 @@ cd /home/${_user}
 wget https://raw.githubusercontent.com/stefal/rtkbase/master/tools/install.sh
 chmod +x install.sh
 sed -i "s/\$(logname)/${_user}/g" /home/${_user}/install.sh
-sed -i "s/\$(logname)/${_user}/g" /home/${_user}/rtkbase/copy_unit.sh
 ./install.sh --dependencies --rtklib --rtkbase-release --gpsd-chrony
+sed -i "s/\$(logname)/${_user}/g" /home/${_user}/rtkbase/copy_unit.sh
 
 # changing hostname
 sed -i "s/${BOARD}/${hostname_new}/g" /etc/hosts

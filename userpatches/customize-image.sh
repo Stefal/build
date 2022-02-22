@@ -79,10 +79,8 @@ sed -i "s/${BOARD}/${hostname_new}/g" /etc/hosts
 sed -i "s/${BOARD}/${hostname_new}/g" /etc/hostname
 
 # injecting commands inside armbian-firstrun
+# there is no user logged in when this stript runs.
 sed -i '/systemctl\ disable\ armbian-firstrun/i \
-#echo '\''basegnss'\'' > \/etc\/hostname \
-_user="\${PWD##*\/}" \
-echo '\''USER IS: '\'' \$_user \
 _user='\''basegnss'\'' \
 echo '\''USER IS: '\'' \$_user \
 \/home\/\$_user\/\/install.sh --unit-files --detect-usb-gnss --configure-gnss --start-services \

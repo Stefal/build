@@ -70,13 +70,11 @@ usermod --shell /bin/bash ${_user}
 usermod -a -G tty,disk,dialout,sudo,audio,video,plugdev,games,users,systemd-journal,input,netdev,ssh ${_user}
 echo ${_user}:basegnss! | chpasswd
 cd /home/${_user}
-#wget https://raw.githubusercontent.com/stefal/rtkbase/master/tools/install.sh
-wget  https://rtkbase.eu/rtkbase_release/rtkbase_2.4b10.sh -O install.sh
+wget https://raw.githubusercontent.com/stefal/rtkbase/master/tools/install.sh
 chmod +x install.sh
 # $HOME variable isn't available inside armbian-firstboot
 sed -i 's/df \"$HOME\"/df \//g' /home/${_user}/install.sh
-#./install.sh --user ${_user} --dependencies --rtklib --rtkbase-release --gpsd-chrony
-./install.sh --user ${_user} --dependencies --rtklib --rtkbase-bundled --gpsd-chrony
+./install.sh --user ${_user} --dependencies --rtklib --rtkbase-release --gpsd-chrony
 
 # changing hostname
 sed -i "s/${BOARD}/${hostname_new}/g" /etc/hosts
@@ -89,7 +87,6 @@ _user='\''basegnss'\'' \
 echo '\''USER IS: '\'' \$_user \
 \/home\/\$_user\/install.sh --user ${_user} --unit-files --detect-usb-gnss --configure-gnss --start-services \
 rm \/home\/\$_user\/install.sh \
-apt update && apt upgrade -y \
 ' /usr/lib/armbian/armbian-firstrun
 
 # cleaning

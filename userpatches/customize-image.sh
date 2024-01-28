@@ -89,7 +89,7 @@ sed -i "s/${BOARD}/${hostname_new}/g" /etc/hostname
 # injecting commands inside armbian-firstrun
 # there is no user logged in when this script runs.
 sed -i '/systemctl\ disable\ armbian-firstrun/i \
-systemctl\ disable\ sysstat-collect.timer \
+systemctl\ mask\ sysstat-collect.timer \
 _user='\''basegnss'\'' \
 echo '\''USER IS: '\'' \$_user \
 \/home\/\$_user\/install.sh --user ${_user} --detect-modem --unit-files --detect-gnss --configure-gnss \

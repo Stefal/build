@@ -61,7 +61,7 @@ fi
 if [ "${BOARD}" = 'orangepizero2' ]
 then
 # add red led blinking on activity
- echo 'activity' > /sys/class/leds/red\:status/trigger
+ echo 'class/leds/red:status/trigger = activity' > /etc/sysfs.d/red_led.conf
  # enable uart5
  sed -i '/^overlay/a overlays=uart5 ' /boot/armbianEnv.txt
 fi
@@ -70,7 +70,7 @@ fi
 if [ "${BOARD}" = 'orangepizero3' ]
 then
 # add red led blinking on activity
- echo 'activity' > /sys/class/leds/red\:status/trigger
+ echo 'class/leds/red:status/trigger = activity' > /etc/sysfs.d/red_led.conf
  # enable uart5
  sed -i '/^overlay/a overlays=uart5 ' /boot/armbianEnv.txt
 fi

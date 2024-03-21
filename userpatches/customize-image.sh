@@ -52,14 +52,16 @@ then
  echo 'blacklist xradio_wlan' > /etc/modprobe.d/xradio_wlan.conf
  echo 'blacklist mac80211' > /etc/modprobe.d/mac80211.conf
  echo 'blacklist cfg80211' > /etc/modprobe.d/cfg80211.conf
- # add red led blinking on microSd card activity
- echo 'class/leds/orangepi:red:status/trigger = mmc0' > /etc/sysfs.d/red_led.conf
+ # add red led blinking on activity
+ echo 'class/leds/orangepi:red:status/trigger = activity' > /etc/sysfs.d/red_led.conf
  # enable uart1
  sed -i 's/^overlays=/overlays=uart1 /g' /boot/armbianEnv.txt
 fi
 
 if [ "${BOARD}" = 'orangepizero2' ]
 then
+# add red led blinking on activity
+ echo 'activity' > /sys/class/leds/red\:status/trigger
  # enable uart5
  sed -i '/^overlay/a overlays=uart5 ' /boot/armbianEnv.txt
 fi
@@ -67,6 +69,8 @@ fi
 
 if [ "${BOARD}" = 'orangepizero3' ]
 then
+# add red led blinking on activity
+ echo 'activity' > /sys/class/leds/red\:status/trigger
  # enable uart5
  sed -i '/^overlay/a overlays=uart5 ' /boot/armbianEnv.txt
 fi

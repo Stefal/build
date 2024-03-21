@@ -58,6 +58,19 @@ then
  sed -i 's/^overlays=/overlays=uart1 /g' /boot/armbianEnv.txt
 fi
 
+if [ "${BOARD}" = 'orangepizero2' ]
+then
+ # enable uart5
+ sed -i '/^overlay/a overlays=uart5 ' /boot/armbianEnv.txt
+fi
+
+
+if [ "${BOARD}" = 'orangepizero3' ]
+then
+ # enable uart5
+ sed -i '/^overlay/a overlays=uart5 ' /boot/armbianEnv.txt
+fi
+
 # install avahi-daemon to enable hostname.local access
 apt-get update && apt-get install -yy avahi-daemon
 [[ -f /usr/share/doc/avahi-daemon/examples/sftp-ssh.service ]] && cp /usr/share/doc/avahi-daemon/examples/sftp-ssh.service /etc/avahi/services/

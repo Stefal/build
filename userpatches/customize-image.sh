@@ -95,15 +95,16 @@ groupadd -f rtkbase
 usermod -a -G tty,disk,dialout,sudo,audio,video,plugdev,games,users,systemd-journal,input,netdev,rtkbase ${_user}
 echo ${_user}:basegnss! | chpasswd
 cd /home/${_user}
-#wget -4 https://raw.githubusercontent.com/stefal/rtkbase/master/tools/install.sh
-wget -4 https://raw.githubusercontent.com/stefal/rtkbase/dev/tools/install.sh
+wget -4 https://raw.githubusercontent.com/stefal/rtkbase/master/tools/install.sh
+#wget -4 https://raw.githubusercontent.com/stefal/rtkbase/dev/tools/install.sh
+#wget -4 https://rtkbase.eu/rtkbase_beta/install.sh
 chmod +x install.sh
 
 # $HOME variable isn't available inside armbian-firstboot
 sed -i 's/df \"$HOME\"/df \//g' /home/${_user}/install.sh
-#./install.sh --user ${_user} --dependencies --rtklib --rtkbase-release --gpsd-chrony
-./install.sh --user ${_user} --dependencies --rtklib --rtkbase-repo dev --gpsd-chrony
-
+./install.sh --user ${_user} --dependencies --rtklib --rtkbase-release --gpsd-chrony
+#./install.sh --user ${_user} --dependencies --rtklib --rtkbase-repo dev --gpsd-chrony
+#./install.sh --user ${_user} --dependencies --rtklib --rtkbase-bundled --gpsd-chrony
 # changing hostname
 sed -i "s/${BOARD}/${hostname_new}/g" /etc/hosts
 sed -i "s/${BOARD}/${hostname_new}/g" /etc/hostname

@@ -48,20 +48,30 @@ hostname_new='basegnss'
 
 if [ "${BOARD}" = 'orangepizero' ]
 then
+ #needed for sysfs used for led configuration
+ #apt install sysfsutils
  # disable wifi for Orange Pi Zero 
  echo 'blacklist xradio_wlan' > /etc/modprobe.d/xradio_wlan.conf
  echo 'blacklist mac80211' > /etc/modprobe.d/mac80211.conf
  echo 'blacklist cfg80211' > /etc/modprobe.d/cfg80211.conf
  # add red led blinking on activity
- echo 'class/leds/orangepi:red:status/trigger = activity' > /etc/sysfs.d/red_led.conf
+ #echo 'activity' > /sys/class/leds/orangepi:red:status/trigger
+ sed -i '/systemctl\ disable\ armbian-firstrun/i \
+ echo '\''heartbeat'\'' > /sys/class/leds/orangepi:red:status/trigger \
+ ' /usr/lib/armbian/armbian-firstrun
  # enable uart1
  sed -i 's/^overlays=/overlays=uart1 /g' /boot/armbianEnv.txt
 fi
 
 if [ "${BOARD}" = 'orangepizero2' ]
 then
+ #needed for sysfs used for led configuration
+# apt install sysfsutils
 # add red led blinking on activity
- echo 'class/leds/red:status/trigger = activity' > /etc/sysfs.d/red_led.conf
+# echo 'class/leds/red:status/trigger = activity' > /etc/sysfs.d/red_led.conf
+# sed -i '/systemctl\ disable\ armbian-firstrun/i \
+# echo '\''activity'\'' > /sys/class/leds/red:status/trigger \
+# ' /usr/lib/armbian/armbian-firstrun
  # enable uart5
  sed -i '/^overlay/a overlays=uart5 ' /boot/armbianEnv.txt
 fi
@@ -69,11 +79,13 @@ fi
 
 if [ "${BOARD}" = 'orangepizero3' ]
 then
+ #needed for sysfs used for led configuration
+ #apt install sysfsutils
 # disable Bluetooth
 echo 'blacklist bluetooth' > /etc/modprobe.d/bluetooth.conf
 echo 'blacklist ecdh_generic' >>  /etc/modprobe.d/bluetooth.conf
 # add red led blinking on activity
-echo 'class/leds/red:status/trigger = activity' > /etc/sysfs.d/red_led.conf
+#echo 'class/devices/leds ....' > /etc/sysctl.d/red_led.conf
 # enable uart5
 sed -i '/^overlay/a overlays=uart5 ' /boot/armbianEnv.txt
 fi

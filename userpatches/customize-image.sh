@@ -45,9 +45,9 @@ InstallRTKBase() {
 echo  '============ Preparing RTKbase =============='
 _user='basegnss'
 hostname_new='basegnss'
-
 if [ "${BOARD}" = 'orangepizero' ]
 then
+ echo 'Apply specific settings for ' "${BOARD}"
  #needed for sysfs used for led configuration
  #apt install sysfsutils
  # disable wifi for Orange Pi Zero 
@@ -58,6 +58,7 @@ then
  #echo 'activity' > /sys/class/leds/orangepi:red:status/trigger
  sed -i '/systemctl\ disable\ armbian-firstrun/i \
  echo '\''heartbeat'\'' > /sys/class/leds/orangepi:red:status/trigger \
+ \/home\/\$_user\/rtkbase\/tools\/opizero_temp_offset.sh \
  ' /usr/lib/armbian/armbian-firstrun
  # enable uart1
  sed -i 's/^overlays=/overlays=uart1 /g' /boot/armbianEnv.txt
@@ -65,6 +66,7 @@ fi
 
 if [ "${BOARD}" = 'orangepizero2' ]
 then
+ echo 'Apply specific settings for ' "${BOARD}"
  #needed for sysfs used for led configuration
 # apt install sysfsutils
 # add red led blinking on activity
@@ -79,6 +81,7 @@ fi
 
 if [ "${BOARD}" = 'orangepizero3' ]
 then
+ echo 'Apply specific settings for ' "${BOARD}"
  #needed for sysfs used for led configuration
  #apt install sysfsutils
 # disable Bluetooth
@@ -89,6 +92,17 @@ echo 'blacklist ecdh_generic' >>  /etc/modprobe.d/bluetooth.conf
 # enable uart5
 sed -i '/^overlay/a overlays=uart5 ' /boot/armbianEnv.txt
 fi
+
+if [ "${BOARD}" = 'rpi4b' ]
+then
+ echo 'Apply specific settings for ' "${BOARD}"
+ # set activity led to heartbeat
+ echo heartbeat > /sys/class/leds/ACT/trigger
+ sed -i '/systemctl\ disable\ armbian-firstrun/i \
+echo heartbeat \>\ \/sys\/class\/leds\/ACT\/trigger \
+' /usr/lib/armbian/armbian-firstrun
+fi
+
 
 # install avahi-daemon to enable hostname.local access
 apt-get update && apt-get install -yy avahi-daemon
@@ -130,7 +144,6 @@ _user='\''basegnss'\'' \
 echo '\''USER IS: '\'' \$_user \
 \/home\/\$_user\/install.sh --user ${_user} --detect-modem --unit-files --detect-gnss --configure-gnss --zeroconf \
 export\ rtkbase_path=\/home\/$_user\/rtkbase \
-\/home\/\$_user\/rtkbase\/tools\/opizero_temp_offset.sh \
 \/home\/\$_user\/install.sh --user ${_user} --start-services\
 rm \/home\/\$_user\/install.sh \
 ' /usr/lib/armbian/armbian-firstrun
